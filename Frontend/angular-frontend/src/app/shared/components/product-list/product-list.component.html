@@ -1,0 +1,269 @@
+<div class="container-fluid py-4">
+  <!-- Page Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <h1 class="h2 mb-0">Products</h1>
+      <p class="text-muted">Discover our amazing product collection</p>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Search & Filters</h5>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <!-- Search Input -->
+            <div class="col-md-4">
+              <label for="searchTerm" class="form-label">Search Products</label>
+              <input
+                type="text"
+                class="form-control"
+                id="searchTerm"
+                [(ngModel)]="searchTerm"
+                placeholder="Enter product name..."
+                (keyup.enter)="applyFilters()"
+              />
+            </div>
+
+            <!-- Category Filter -->
+            <div class="col-md-4">
+              <label for="categoryFilter" class="form-label">Category</label>
+              <select
+                class="form-select"
+                id="categoryFilter"
+                [value]="selectedCategory || ''"
+                (change)="onCategoryChange($any($event.target).value || null)"
+              >
+                <option value="">All Categories</option>
+                @for (category of categories; track category.id) {
+                <option [value]="category.id">{{ category.name }}</option>
+                }
+              </select>
+            </div>
+
+            <!-- Price Range -->
+            <div class="col-md-2">
+              <label for="minPrice" class="form-label">Min Price</label>
+              <input
+                type="number"
+                class="form-control"
+                id="minPrice"
+                [(ngModel)]="minPrice"
+                placeholder="0"
+                min="0"
+                step="0.01"
+              />
+            </div>
+            <div class="col-md-2">
+              <label for="maxPrice" class="form-label">Max Price</label>
+              <input
+                type="number"
+                class="form-control"
+                id="maxPrice"
+                [(ngModel)]="maxPrice"
+                placeholder="1000"
+                min="0"
+                step="0.01"
+              />
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="col-12">
+              <button
+                type="button"
+                class="btn btn-primary me-2"
+                (click)="applyFilters()"
+                [disabled]="isLoading"
+              >
+                <i class="bi bi-search me-1"></i>
+                Apply Filters
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="clearFilters()"
+                [disabled]="isLoading"
+              >
+                <i class="bi bi-x-circle me-1"></i>
+                Clear Filters
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results Summary -->
+  @if (!isLoading && !error) {
+  <div class="row mb-3">
+    <div class="col-12">
+      <p class="text-muted mb-0">
+        Showing {{ products.length }} of {{ totalElements }} products @if (currentPage > 0 ||
+        totalPages > 1) { (Page {{ currentPage + 1 }} of {{ totalPages }}) }
+      </p>
+    </div>
+  </div>
+  }
+
+  <!-- Loading State -->
+  @if (isLoading) {
+  <div class="row">
+    <div class="col-12 text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading products...</span>
+      </div>
+      <p class="mt-3 text-muted">Loading products...</p>
+    </div>
+  </div>
+  }
+
+  <!-- Error State -->
+  @else if (error) {
+  <div class="row">
+    <div class="col-12">
+      <div class="alert alert-danger" role="alert">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        {{ error }}
+        <button type="button" class="btn btn-sm btn-outline-danger ms-3" (click)="loadProducts()">
+          Try Again
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+
+  <!-- No Products State -->
+  @else if (products.length === 0) {
+  <div class="row">
+    <div class="col-12 text-center py-5">
+      <i class="bi bi-box-seam display-1 text-muted mb-3"></i>
+      <h3 class="text-muted">No products found</h3>
+      <p class="text-muted">Try adjusting your search criteria or clear the filters.</p>
+      <button type="button" class="btn btn-primary" (click)="clearFilters()">
+        Clear All Filters
+      </button>
+    </div>
+  </div>
+  }
+
+  <!-- Products Grid -->
+  @else {
+  <div class="row g-4 mb-5">
+    @for (product of products; track product.id) {
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <div class="card h-100 product-card">
+        <!-- Product Image -->
+        <div class="product-card-img-container">
+          <img
+            [src]="
+              product.imageUrl && product.imageUrl.trim() !== ''
+                ? product.imageUrl
+                : 'https://firebasestorage.googleapis.com/v0/b/online-shopping-e-and.firebasestorage.app/o/products%2FpalceHolder%2Felementor-placeholder-image.png?alt=media&token=636eae23-a48c-4cb2-90cc-b85276d25555'
+            "
+            alt="{{ product.name }}"
+          />
+        </div>
+
+        <!-- Product Details -->
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">{{ product.name }}</h5>
+          <p class="card-text text-muted small mb-2">
+            <i class="bi bi-tag me-1"></i>
+            {{ product.category.name }}
+          </p>
+          <p class="card-text flex-grow-1">{{ product.description }}</p>
+
+          <!-- Price and Stock -->
+          <div class="mt-auto">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="h5 text-primary mb-0">LE{{ product.price | number : '1.2-2' }}</span>
+              <small class="text-muted"> Stock: {{ product.stock }} </small>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex gap-2">
+              <a
+                [routerLink]="
+                  isLoggedIn ? ['/shop/products', product.id!] : ['/public/products', product.id!]
+                "
+                class="btn btn-outline-primary btn-sm flex-grow-1"
+              >
+                <i class="bi bi-eye me-1"></i>
+                View Details
+              </a>
+              @if (isLoggedIn) {
+              <button
+                class="btn btn-primary btn-sm flex-grow-1"
+                (click)="addToCart(product.id!)"
+                [disabled]="product.stock <= 0"
+              >
+                <i class="bi bi-cart-plus me-1"></i>
+                Add to Cart
+              </button>
+              } @else {
+              <a [routerLink]="['/public/login']" class="btn btn-success btn-sm flex-grow-1">
+                <i class="bi bi-box-arrow-in-right me-1"></i>
+                Login to Shop
+              </a>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+
+  <!-- Pagination -->
+  <div class="row">
+    <div class="col-12">
+      <nav aria-label="Product pagination">
+        <ul class="pagination justify-content-center">
+          <!-- Previous Button -->
+          <li class="page-item" [class.disabled]="currentPage === 0">
+            <button
+              class="page-link"
+              (click)="previousPage()"
+              [disabled]="currentPage === 0 || isLoading"
+            >
+              <i class="bi bi-chevron-left"></i>
+              Previous
+            </button>
+          </li>
+
+          <!-- Page Numbers -->
+          @for (pageNum of [].constructor(totalPages); track $index) { @if ($index === currentPage)
+          {
+          <li class="page-item active">
+            <span class="page-link">{{ $index + 1 }}</span>
+          </li>
+          } @else if ($index >= currentPage - 2 && $index <= currentPage + 2) {
+          <li class="page-item">
+            <button class="page-link" (click)="goToPage($index)" [disabled]="isLoading">
+              {{ $index + 1 }}
+            </button>
+          </li>
+          } }
+
+          <!-- Next Button -->
+          <li class="page-item" [class.disabled]="currentPage >= totalPages - 1">
+            <button
+              class="page-link"
+              (click)="nextPage()"
+              [disabled]="currentPage >= totalPages - 1 || isLoading"
+            >
+              Next
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+  }
+</div>

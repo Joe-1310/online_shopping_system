@@ -1,0 +1,198 @@
+<div class="container-fluid py-4">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-3 text-muted">Loading your profile...</p>
+  </div>
+
+  <!-- Profile Content -->
+  <div *ngIf="!isLoading && user" class="profile-container">
+    <!-- Top Row - Settings Forms and Stats -->
+    <div class="row">
+      <!-- Username Update Card -->
+      <div class="col-lg-4 mb-4">
+        <div class="card shadow-sm h-100">
+          <div class="card-header bg-primary text-white">
+            <h5 class="card-title mb-0">
+              <i class="bi bi-person me-2"></i>
+              Update Username
+            </h5>
+          </div>
+          <div class="card-body">
+            <form [formGroup]="nameForm" (ngSubmit)="onNameSubmit()">
+              <div class="mb-3">
+                <label for="username" class="form-label">
+                  <i class="bi bi-person me-1"></i>
+                  Username
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="username"
+                  formControlName="name"
+                  placeholder="Enter your username"
+                  [class.is-invalid]="
+                    nameForm.get('name')?.invalid && nameForm.get('name')?.touched
+                  "
+                />
+                <div
+                  *ngIf="nameForm.get('name')?.invalid && nameForm.get('name')?.touched"
+                  class="invalid-feedback"
+                >
+                  <div *ngIf="nameForm.get('name')?.errors?.['required']">Username is required</div>
+                </div>
+              </div>
+              <button
+                type="submit"
+                class="btn btn-primary w-100"
+                [disabled]="nameForm.invalid || !nameForm.dirty || isNameSubmitting"
+              >
+                <span
+                  *ngIf="isNameSubmitting"
+                  class="spinner-border spinner-border-sm me-2"
+                  role="status"
+                ></span>
+                <i *ngIf="!isNameSubmitting" class="bi bi-check-circle me-2"></i>
+                {{ isNameSubmitting ? 'Saving...' : 'Save Username' }}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Email Update Card -->
+      <div class="col-lg-4 mb-4">
+        <div class="card shadow-sm h-100">
+          <div class="card-header bg-success text-white">
+            <h5 class="card-title mb-0">
+              <i class="bi bi-envelope me-2"></i>
+              Update Email Address
+            </h5>
+          </div>
+          <div class="card-body">
+            <form [formGroup]="emailForm" (ngSubmit)="onEmailSubmit()">
+              <div class="mb-3">
+                <label for="email" class="form-label">
+                  <i class="bi bi-envelope me-1"></i>
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  formControlName="email"
+                  placeholder="Enter your email address"
+                  [class.is-invalid]="
+                    emailForm.get('email')?.invalid && emailForm.get('email')?.touched
+                  "
+                />
+                <div
+                  *ngIf="emailForm.get('email')?.invalid && emailForm.get('email')?.touched"
+                  class="invalid-feedback"
+                >
+                  <div *ngIf="emailForm.get('email')?.errors?.['required']">Email is required</div>
+                  <div *ngIf="emailForm.get('email')?.errors?.['email']">
+                    Please enter a valid email address
+                  </div>
+                </div>
+              </div>
+              <button
+                type="submit"
+                class="btn btn-success w-100"
+                [disabled]="emailForm.invalid || !emailForm.dirty || isEmailSubmitting"
+              >
+                <span
+                  *ngIf="isEmailSubmitting"
+                  class="spinner-border spinner-border-sm me-2"
+                  role="status"
+                ></span>
+                <i *ngIf="!isEmailSubmitting" class="bi bi-check-circle me-2"></i>
+                {{ isEmailSubmitting ? 'Saving...' : 'Save Email' }}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Your Stats Card -->
+      <div class="col-lg-4 mb-4">
+        <div class="stats-card">
+          <h4 class="fw-bold mb-3">
+            <i class="bi bi-graph-up me-2"></i>
+            Your Stats
+          </h4>
+          <div *ngIf="!customerStats" class="text-center py-3">
+            <div class="spinner-border spinner-border-sm text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="text-muted mt-2 mb-0">Loading stats...</p>
+          </div>
+          <div *ngIf="customerStats" class="stats-content">
+            <div class="stat-item">
+              <div class="stat-number">{{ customerStats.totalOrders }}</div>
+              <div class="stat-label">Total Orders</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">{{ formatCurrency(customerStats.totalSpent) }}</div>
+              <div class="stat-label">Total Spent</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">{{ cartItemCount }}</div>
+              <div class="stat-label">Cart Items</div>
+            </div>
+
+            <div class="stat-item">
+              <div class="stat-number">{{ customerStats.orderStatusCounts.delivered }}</div>
+              <div class="stat-label">Delivered Orders</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Row - Recent Activity -->
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="activity-card">
+          <h4 class="fw-bold mb-3">
+            <i class="bi bi-activity me-2"></i>
+            Recent Activity
+          </h4>
+          <div *ngIf="recentActivity === null" class="text-center py-3">
+            <div class="spinner-border spinner-border-sm text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="text-muted mt-2 mb-0">Loading activity...</p>
+          </div>
+          <div
+            *ngIf="recentActivity !== null && recentActivity.length === 0"
+            class="text-center py-4"
+          >
+            <i class="bi bi-inbox text-muted" style="font-size: 2rem"></i>
+            <p class="text-muted mt-2">No recent activity</p>
+          </div>
+          <div *ngFor="let activity of recentActivity" class="activity-item">
+            <div class="activity-icon" [ngClass]="getActivityIconClass(activity.type)">
+              <i [class]="getActivityIcon(activity.type)"></i>
+            </div>
+            <div class="activity-content">
+              <h6 class="mb-1">{{ activity.title }}</h6>
+              <p class="text-muted mb-0">{{ activity.description }}</p>
+              <small class="text-muted">{{ formatTimeAgo(activity.timestamp) }}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!isLoading && !user" class="text-center py-5">
+    <div class="alert alert-warning" role="alert">
+      <i class="bi bi-exclamation-triangle me-2"></i>
+      Unable to load profile data. Please try refreshing the page.
+    </div>
+  </div>
+</div>

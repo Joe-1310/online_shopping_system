@@ -1,0 +1,50 @@
+.modal {
+  z-index: 1055;
+}
+
+.modal-backdrop {
+  backdrop-filter: blur(2px);
+  z-index: 1050;
+}
+
+.modal-content {
+  border: none;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.badge {
+  font-size: 0.875em;
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+.table-dark th {
+  border-color: #495057;
+}
+
+.table-secondary {
+  background-color: #e9ecef;
+}
+
+.fw-bold {
+  font-weight: bold;
+}
+
+.display-1 {
+  font-size: 4rem;
+}

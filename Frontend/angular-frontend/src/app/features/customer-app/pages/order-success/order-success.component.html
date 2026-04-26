@@ -1,0 +1,50 @@
+<div class="order-success-container">
+  <div class="container-fluid py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 col-md-8">
+        <div class="text-center">
+          <!-- Success Icon -->
+          <div class="success-icon mb-4">
+            <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem"></i>
+          </div>
+
+          <!-- Success Message -->
+          <h1 class="display-6 fw-bold text-success mb-3">Payment Successful!</h1>
+          <p class="lead text-muted mb-4">
+            Thank you for your purchase! Your order has been confirmed and will be processed
+            shortly.
+          </p>
+
+          <!-- Order Details Placeholder -->
+          <div class="card shadow-sm mb-4">
+            <div class="card-body">
+              <h5 class="card-title mb-3"><i class="bi bi-receipt me-2"></i>Order Confirmation</h5>
+              <p class="text-muted mb-0">
+                You will receive an email confirmation with your order details and tracking
+                information.
+              </p>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="d-grid gap-3 d-md-flex justify-content-md-center">
+            <button type="button" class="btn btn-primary btn-lg" (click)="continueShopping()">
+              <i class="bi bi-shop me-2"></i>Continue Shopping
+            </button>
+            <button type="button" class="btn btn-outline-primary btn-lg" (click)="viewOrders()">
+              <i class="bi bi-list-ul me-2"></i>View My Orders
+            </button>
+          </div>
+
+          <!-- Additional Info -->
+          <div class="mt-5">
+            <small class="text-muted">
+              <i class="bi bi-shield-check text-success me-1"></i>
+              Your payment was processed securely through Stripe
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

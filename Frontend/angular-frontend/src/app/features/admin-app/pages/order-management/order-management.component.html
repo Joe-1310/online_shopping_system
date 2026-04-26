@@ -1,0 +1,325 @@
+<div class="admin-order-container">
+  <div class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h1 class="h3 mb-2"><i class="bi bi-clipboard-data me-2"></i>Order Management</h1>
+            <p class="text-muted mb-0">Manage and monitor all customer orders</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title mb-0"><i class="bi bi-funnel me-2"></i>Filters</h5>
+          </div>
+          <div class="card-body">
+            <form [formGroup]="filterForm" (ngSubmit)="applyFilters()">
+              <div class="row g-3">
+                <div class="col-md-2">
+                  <label class="form-label">Order ID</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    formControlName="orderId"
+                    placeholder="Order ID"
+                  />
+                </div>
+                <div class="col-md-2">
+                  <label class="form-label">User ID</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    formControlName="userId"
+                    placeholder="User ID"
+                  />
+                </div>
+                <div class="col-md-2">
+                  <label class="form-label">Username</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="username"
+                    placeholder="Username"
+                  />
+                </div>
+                <div class="col-md-2">
+                  <label class="form-label">Status</label>
+                  <select class="form-control" formControlName="status">
+                    <option value="">All Status</option>
+                    <option value="PENDING">Pending</option>
+                    <option value="PROCESSING">Processing</option>
+                    <option value="SHIPPED">Shipped</option>
+                    <option value="DELIVERED">Delivered</option>
+                    <option value="CANCELLED">Cancelled</option>
+                  </select>
+                </div>
+                <div class="col-md-2">
+                  <label class="form-label">Start Date</label>
+                  <input type="date" class="form-control" formControlName="startDate" />
+                </div>
+                <div class="col-md-2">
+                  <label class="form-label">End Date</label>
+                  <input type="date" class="form-control" formControlName="endDate" />
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-12">
+                  <button type="submit" class="btn btn-primary me-2">
+                    <i class="bi bi-search me-1"></i>Apply Filters
+                  </button>
+                  <button type="button" class="btn btn-outline-secondary" (click)="clearFilters()">
+                    <i class="bi bi-x-circle me-1"></i>Clear
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    @if (isLoading) {
+    <div class="row">
+      <div class="col-12">
+        <div class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="mt-3 text-muted">Loading orders...</p>
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- Error State -->
+    @if (error && !isLoading) {
+    <div class="row">
+      <div class="col-12">
+        <div class="alert alert-danger" role="alert">
+          <div class="d-flex align-items-center">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <div>
+              <strong>Error:</strong> {{ error }}
+              <button class="btn btn-sm btn-outline-danger ms-3" (click)="fetchOrders()">
+                <i class="bi bi-arrow-clockwise me-1"></i>Retry
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- Orders Content -->
+    @if (!isLoading && !error) {
+    <!-- Empty State -->
+    @if (!hasOrders()) {
+    <div class="row">
+      <div class="col-12">
+        <div class="text-center py-5">
+          <div class="empty-orders">
+            <i class="bi bi-clipboard-data display-1 text-muted mb-3"></i>
+            <h4 class="text-muted mb-3">No Orders Found</h4>
+            <p class="text-muted mb-4">
+              No orders match the current filters. Try adjusting your search criteria.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- Orders List -->
+    @if (hasOrders()) {
+    <!-- Orders Summary -->
+    <div class="row mb-3">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+          <p class="text-muted mb-0">Showing {{ orders.length }} orders</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap 5 Accordion for Orders -->
+    <div class="accordion" id="ordersAccordion">
+      @for (order of orders || []; track order.orderId; let i = $index) {
+      <div class="accordion-item">
+        <!-- Accordion Header -->
+        <h2 class="accordion-header" [id]="'heading' + order.orderId">
+          <button
+            class="accordion-button"
+            [class.collapsed]="i !== 0"
+            type="button"
+            data-bs-toggle="collapse"
+            [attr.data-bs-target]="'#collapse' + order.orderId"
+            [attr.aria-expanded]="i === 0 ? 'true' : 'false'"
+            [attr.aria-controls]="'collapse' + order.orderId"
+            (click)="loadOrderDetails(order.orderId)"
+          >
+            <div class="d-flex justify-content-between align-items-center w-100 me-3">
+              <div class="d-flex align-items-center">
+                <div class="me-4">
+                  <strong class="text-primary">Order #{{ order.orderId }}</strong>
+                  @if (order.userId) {
+                  <div>
+                    <small class="text-muted">User ID: {{ order.userId }}</small>
+                  </div>
+                  }
+                </div>
+                <div class="me-4">
+                  <small class="text-muted d-block">Order Date</small>
+                  <span>{{ order.createdAt | date : 'longDate' }}</span>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-center">
+                <div class="me-4 text-end">
+                  <small class="text-muted d-block">Total</small>
+                  <strong class="text-success">{{ order.totalPrice | currency : 'EGP' }}</strong>
+                </div>
+                <div class="text-end">
+                  <span class="badge" [class]="getStatusBadgeClass(order.status)">
+                    {{ getStatusDisplayText(order.status) }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </button>
+        </h2>
+
+        <!-- Accordion Body -->
+        <div
+          [id]="'collapse' + order.orderId"
+          class="accordion-collapse collapse"
+          [class.show]="i === 0"
+          [attr.aria-labelledby]="'heading' + order.orderId"
+          data-bs-parent="#ordersAccordion"
+        >
+          <div class="accordion-body">
+            <!-- Loading Order Details -->
+            @if (isOrderDetailsLoading(order.orderId)) {
+            <div class="text-center py-3">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading details...</span>
+              </div>
+              <p class="mt-2 text-muted">Loading order details...</p>
+            </div>
+            }
+
+            <!-- Customer Information -->
+            @if (getUserDetails(order.orderId)) {
+            <div class="row mb-4">
+              <div class="col-12">
+                <h6 class="border-bottom pb-2 mb-3">
+                  <i class="bi bi-person-circle me-2"></i>Customer Information
+                </h6>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="customer-info">
+                      <div class="info-item">
+                        <strong>Username:</strong> {{ getUserDetails(order.orderId)?.username }}
+                      </div>
+                      <div class="info-item">
+                        <strong>Email:</strong> {{ getUserDetails(order.orderId)?.email }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="customer-info">
+                      <div class="info-item">
+                        <strong>User ID:</strong> {{ getUserDetails(order.orderId)?.id }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            }
+
+            <!-- Order Items Table -->
+            @if (order && order.items && order.items.length > 0) {
+            <h6 class="border-bottom pb-2 mb-3"><i class="bi bi-box-seam me-2"></i>Order Items</h6>
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Product</th>
+                    <th scope="col" class="text-center">Quantity</th>
+                    <th scope="col" class="text-end">Price</th>
+                    <th scope="col" class="text-end">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (item of order.items || []; track item.productId; let itemIndex = $index) {
+                  <tr>
+                    <td>{{ itemIndex + 1 }}</td>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        @if (item.imageUrl) {
+                        <div class="product-image me-3">
+                          <img
+                            [src]="item.imageUrl"
+                            [alt]="item.productName || 'Product Image'"
+                            class="img-thumbnail"
+                            style="width: 60px; height: 60px; object-fit: contain"
+                          />
+                        </div>
+                        } @else {
+                        <div class="product-placeholder me-3">
+                          <i class="bi bi-box"></i>
+                        </div>
+                        }
+                        <div>
+                          <strong>{{ item.productName || 'Product #' + item.productId }}</strong>
+                          <br />
+                          <small class="text-muted">{{
+                            item.productDescription || 'Product ID: ' + item.productId
+                          }}</small>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      <span class="badge bg-light text-dark">{{ item.quantity }}</span>
+                    </td>
+                    <td class="text-end">{{ item.price | currency : 'EGP' }}</td>
+                    <td class="text-end">
+                      <strong>{{ item.price * item.quantity | currency : 'EGP' }}</strong>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+                <tfoot class="table-light">
+                  <tr>
+                    <td colspan="4" class="text-end"><strong>Order Total:</strong></td>
+                    <td class="text-end">
+                      <strong class="text-success fs-5">{{
+                        order.totalPrice | currency : 'EGP'
+                      }}</strong>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            } @else {
+            <div class="text-center py-3">
+              <p class="text-muted mb-0">No items found for this order.</p>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+
+    } }
+  </div>
+</div>

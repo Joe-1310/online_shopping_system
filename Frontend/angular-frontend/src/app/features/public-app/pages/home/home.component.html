@@ -1,0 +1,46 @@
+<div *ngIf="loading" class="loading">Loading...</div>
+
+<div *ngFor="let section of categoriesWithProducts" class="category-section">
+  <h2 class="category-title">{{ section.category.name }}</h2>
+
+  <div class="products-row">
+    <div class="product-card" *ngFor="let product of section.products">
+      <!-- Product Image -->
+      <div class="product-image-container">
+        <img
+          [src]="
+            product.imageUrl && product.imageUrl.trim() !== ''
+              ? product.imageUrl
+              : 'https://firebasestorage.googleapis.com/v0/b/online-shopping-e-and.firebasestorage.app/o/products%2FpalceHolder%2Felementor-placeholder-image.png?alt=media&token=636eae23-a48c-4cb2-90cc-b85276d25555'
+          "
+          [alt]="product.name"
+          class="product-image"
+          (load)="onImageLoad($event)"
+          (error)="onImageError($event)"
+          #productImage
+        />
+        <div class="image-loading" *ngIf="!productImage.complete">
+          <div class="spinner"></div>
+        </div>
+      </div>
+
+      <div class="product-info">
+        <h3 class="product-name">{{ product.name }}</h3>
+        <p class="product-description">{{ product.description }}</p>
+        <p class="product-price">{{ product.price }}</p>
+        <p
+          class="product-stock"
+          [class.in-stock]="product.stock > 0"
+          [class.out-of-stock]="product.stock === 0"
+        >
+          {{ product.stock > 0 ? product.stock + ' in stock' : 'Out of stock' }}
+        </p>
+
+        <!-- View Details Button -->
+        <button class="view-details-btn" (click)="navigateToProduct(product.id!)">
+          View Details
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

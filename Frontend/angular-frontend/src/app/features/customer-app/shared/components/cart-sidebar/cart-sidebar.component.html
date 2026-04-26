@@ -1,0 +1,150 @@
+<!-- Cart Sidebar Offcanvas -->
+<div
+  class="offcanvas offcanvas-end"
+  tabindex="-1"
+  id="cartSidebar"
+  aria-labelledby="cartSidebarLabel"
+  [class.show]="isSidebarOpen$ | async"
+  [style.visibility]="(isSidebarOpen$ | async) ? 'visible' : 'hidden'"
+>
+  <!-- Header -->
+  <div class="offcanvas-header border-bottom">
+    <h5 class="offcanvas-title fw-bold" id="cartSidebarLabel">
+      <i class="bi bi-cart3 me-2 text-primary"></i>
+      My Cart
+    </h5>
+    <button
+      type="button"
+      class="btn-close"
+      (click)="closeSidebar()"
+      aria-label="Close cart sidebar"
+    ></button>
+  </div>
+
+  <!-- Body -->
+  <div class="offcanvas-body p-0">
+    <ng-container *ngIf="cartWithImages$ | async as cart">
+      <!-- Empty Cart State -->
+      <div
+        *ngIf="isEmpty(cart)"
+        class="d-flex flex-column align-items-center justify-content-center py-5"
+      >
+        <i class="bi bi-cart-x display-1 text-muted mb-3"></i>
+        <h6 class="text-muted mb-2">Your cart is empty</h6>
+        <p class="text-muted text-center small px-3">Start shopping to add items to your cart</p>
+      </div>
+
+      <!-- Cart Items -->
+      <div *ngIf="hasItems(cart)" class="cart-items">
+        <div
+          class="cart-item p-3 border-bottom"
+          *ngFor="let item of cart.items; trackBy: trackByProductId"
+        >
+          <!-- Item Header with Image -->
+          <div class="d-flex align-items-start mb-2">
+            <div class="cart-sidebar-img-container me-3">
+              <img
+                [src]="
+                  item.imageUrl && item.imageUrl.trim() !== ''
+                    ? item.imageUrl
+                    : 'https://firebasestorage.googleapis.com/v0/b/online-shopping-e-and.firebasestorage.app/o/products%2FpalceHolder%2Felementor-placeholder-image.png?alt=media&token=636eae23-a48c-4cb2-90cc-b85276d25555'
+                "
+                [alt]="item.productName"
+                class="img-fluid rounded"
+              />
+            </div>
+            <div class="flex-grow-1">
+              <div class="d-flex justify-content-between align-items-start">
+                <h6 class="mb-0 fw-semibold text-truncate me-2">
+                  {{ item.productName }}
+                </h6>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-danger"
+                  (click)="removeItem(item.productId)"
+                  title="Remove item"
+                >
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item Details -->
+          <div class="row g-2 mb-2">
+            <div class="col-6">
+              <small class="text-muted">Price:</small>
+              <div class="fw-semibold text-primary">${{ item.price.toFixed(2) }}</div>
+            </div>
+            <div class="col-6">
+              <small class="text-muted">Quantity:</small>
+              <div class="input-group input-group-sm">
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary btn-sm"
+                  (click)="updateItemQuantity(item.productId, item.quantity - 1)"
+                  [disabled]="item.quantity <= 1"
+                >
+                  <i class="bi bi-dash"></i>
+                </button>
+                <input
+                  type="number"
+                  class="form-control text-center"
+                  [ngModel]="item.quantity"
+                  min="1"
+                  (ngModelChange)="updateItemQuantity(item.productId, $event)"
+                  style="width: 50px"
+                />
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary btn-sm"
+                  (click)="updateItemQuantity(item.productId, item.quantity + 1)"
+                >
+                  <i class="bi bi-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item Total -->
+          <div class="text-end">
+            <small class="text-muted">Total:</small>
+            <div class="fw-bold">${{ (item.price * item.quantity).toFixed(2) }}</div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- Footer -->
+  <div class="offcanvas-footer border-top p-3" *ngIf="hasItems(cartWithImages$ | async)">
+    <!-- Cart Summary -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <small class="text-muted">Items:</small>
+        <span class="fw-semibold ms-1">{{ getTotalItems(cartWithImages$ | async) }}</span>
+      </div>
+      <div>
+        <small class="text-muted">Subtotal:</small>
+        <span class="fw-bold text-primary ms-1">
+          ${{ calculateSubtotal(cartWithImages$ | async).toFixed(2) }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="d-grid gap-2">
+      <button type="button" class="btn btn-outline-primary" (click)="viewFullCart()">
+        <i class="bi bi-cart3 me-2"></i>
+        View Full Cart
+      </button>
+      <button type="button" class="btn btn-primary" (click)="proceedToCheckout()">
+        <i class="bi bi-credit-card me-2"></i>
+        Proceed to Checkout
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Backdrop -->
+<div class="offcanvas-backdrop fade" *ngIf="isSidebarOpen$ | async" (click)="closeSidebar()"></div>

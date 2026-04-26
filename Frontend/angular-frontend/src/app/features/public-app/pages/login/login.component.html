@@ -1,0 +1,72 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h2 class="text-center mb-4">
+        <i class="bi bi-box-arrow-in-right me-2 text-primary"></i>
+        Welcome Back
+      </h2>
+      <p class="text-center text-muted">Sign in to your account</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="bi bi-person"></i>
+          </span>
+          <input
+            type="text"
+            id="username"
+            class="form-control"
+            formControlName="username"
+            placeholder="Enter your username"
+            [class.is-invalid]="f['username'].invalid && f['username'].touched"
+          />
+        </div>
+        <div class="invalid-feedback" *ngIf="f['username'].invalid && f['username'].touched">
+          Username is required
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="bi bi-lock"></i>
+          </span>
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            formControlName="password"
+            placeholder="Enter your password"
+            [class.is-invalid]="f['password'].invalid && f['password'].touched"
+          />
+        </div>
+        <div class="invalid-feedback" *ngIf="f['password'].invalid && f['password'].touched">
+          Password is required
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 mb-3" [disabled]="loginForm.invalid">
+        <i class="bi bi-box-arrow-in-right me-2"></i>
+        Sign In
+      </button>
+    </form>
+
+    <div class="social-login">
+      <div id="googleButton" class="w-100 mb-2"></div>
+      <button type="button" class="btn btn-outline-dark w-100" (click)="loginWithGithub()">
+        <i class="bi bi-github me-2"></i> Sign in with GitHub
+      </button>
+    </div>
+
+    <div class="auth-footer text-center">
+      <p class="mb-0">
+        Don't have an account?
+        <a [routerLink]="['/public/signup']" class="text-decoration-none">Sign up here</a>
+      </p>
+    </div>
+  </div>
+</div>

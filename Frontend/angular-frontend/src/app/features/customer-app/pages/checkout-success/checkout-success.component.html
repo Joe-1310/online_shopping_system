@@ -1,0 +1,157 @@
+<div class="checkout-success-container">
+  <div class="container-fluid py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10">
+        <!-- Loading State -->
+        @if (isLoading) {
+        <div class="text-center py-5">
+          <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem">
+            <span class="visually-hidden">Processing your order...</span>
+          </div>
+          <h3 class="mt-3 text-muted">Processing your order...</h3>
+          <p class="text-muted">Please wait while we finalize your purchase.</p>
+        </div>
+        }
+
+        <!-- Error State -->
+        @else if (error) {
+        <div class="text-center py-5">
+          <div class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <h4 class="alert-heading">Order Processing Error</h4>
+            <p>{{ error }}</p>
+            <hr />
+            <p class="mb-0">Please contact our support team if this issue persists.</p>
+          </div>
+          <div class="mt-4">
+            <button type="button" class="btn btn-primary me-3" (click)="continueShopping()">
+              <i class="bi bi-shop me-2"></i>Continue Shopping
+            </button>
+            <button type="button" class="btn btn-outline-primary" (click)="viewOrders()">
+              <i class="bi bi-list-ul me-2"></i>View My Orders
+            </button>
+          </div>
+        </div>
+        }
+
+        <!-- Success State -->
+        @else if (order || (!error && !isLoading)) {
+        <div class="text-center">
+          <!-- Success Icon -->
+          <div class="success-icon mb-4">
+            <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem"></i>
+          </div>
+
+          <!-- Success Message -->
+          <h1 class="display-6 fw-bold text-success mb-3">Payment Successful!</h1>
+          @if (order) {
+          <p class="lead text-muted mb-4">
+            Thank you for your purchase! Your order has been confirmed and will be processed
+            shortly.
+          </p>
+          } @else {
+          <p class="lead text-muted mb-4">
+            Thank you for your payment! Your transaction has been completed successfully.
+          </p>
+          }
+
+          <!-- Order Details -->
+          @if (order) {
+          <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+              <h5 class="card-title mb-0"><i class="bi bi-receipt me-2"></i>Order Confirmation</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6 text-md-start">
+                  <p class="mb-1"><strong>Order ID:</strong></p>
+                  <p class="text-muted mb-3">#{{ order.orderId }}</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                  <p class="mb-1"><strong>Total Amount:</strong></p>
+                  <p class="text-success h5 mb-3">LE{{ order.totalPrice | number : '1.2-2' }}</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 text-md-start">
+                  <p class="mb-1"><strong>Status:</strong></p>
+                  <span class="badge bg-warning text-dark">{{ order.status }}</span>
+                </div>
+                <div class="col-md-6 text-md-end">
+                  <p class="mb-1"><strong>Date:</strong></p>
+                  <p class="text-muted mb-0">{{ order.createdAt | date : 'medium' }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          }
+
+          <!-- Order Items Summary -->
+          @if (order && order.items && order.items.length > 0) {
+          <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light">
+              <h6 class="card-title mb-0">Order Items</h6>
+            </div>
+            <div class="card-body p-0">
+              @for (item of order.items; track item.productId) {
+              <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+                <div class="d-flex align-items-center">
+                  @if (item.imageUrl) {
+                  <img
+                    [src]="item.imageUrl"
+                    alt="Product"
+                    class="me-3"
+                    style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px"
+                  />
+                  }
+                  <div>
+                    <h6 class="mb-1">{{ item.productName }}</h6>
+                    <small class="text-muted">Quantity: {{ item.quantity }}</small>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <strong>LE{{ item.price | number : '1.2-2' }}</strong>
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+          }
+
+          <!-- Action Buttons -->
+          <div class="d-grid gap-3 d-md-flex justify-content-md-center">
+            <button type="button" class="btn btn-primary btn-lg" (click)="continueShopping()">
+              <i class="bi bi-shop me-2"></i>Continue Shopping
+            </button>
+            @if (order) {
+            <button
+              type="button"
+              class="btn btn-outline-primary btn-lg"
+              (click)="viewOrderDetails()"
+            >
+              <i class="bi bi-eye me-2"></i>View Order Details
+            </button>
+            }
+            <button type="button" class="btn btn-outline-secondary btn-lg" (click)="viewOrders()">
+              <i class="bi bi-list-ul me-2"></i>View All Orders
+            </button>
+          </div>
+
+          <!-- Additional Info -->
+          <div class="mt-5">
+            <small class="text-muted">
+              <i class="bi bi-shield-check text-success me-1"></i>
+              Your payment was processed securely through Stripe
+            </small>
+            <br />
+            <small class="text-muted">
+              <i class="bi bi-envelope me-1"></i>
+              You will receive an email confirmation with your order details
+            </small>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

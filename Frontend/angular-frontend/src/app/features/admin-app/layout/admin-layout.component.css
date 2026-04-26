@@ -1,0 +1,26 @@
+/* Admin Layout Styles */
+.navbar-brand {
+  font-weight: 600;
+}
+
+.nav-link.active {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 0.375rem;
+}
+
+.dropdown-menu {
+  border: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+main {
+  min-height: calc(100vh - 140px);
+}
+
+footer {
+  margin-top: auto;
+}

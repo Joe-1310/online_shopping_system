@@ -1,0 +1,68 @@
+@if (show) {
+<!-- Modal backdrop -->
+<div class="modal-backdrop fade show" (click)="closeModal()"></div>
+
+<div
+  class="modal fade show"
+  style="display: block"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="userRoleModalLabel"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="userRoleModalLabel">Update User Role</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+      </div>
+      <form [formGroup]="roleForm" (ngSubmit)="onSubmit()">
+        <div class="modal-body">
+          <div class="mb-3">
+            <p><strong>User:</strong> {{ user?.username }} ({{ user?.email }})</p>
+          </div>
+          <div class="mb-3">
+            <label for="role" class="form-label">Role <span class="text-danger">*</span></label>
+            <select
+              class="form-select"
+              id="role"
+              formControlName="role"
+              [class.is-invalid]="isFieldInvalid('role')"
+              [disabled]="submitting"
+            >
+              <option value="">Select Role</option>
+              <option value="ADMIN">Admin</option>
+              <option value="SUPER_ADMIN">Super Admin</option>
+              <option value="CUSTOMER">Customer</option>
+              <option value="VENDOR">Vendor</option>
+            </select>
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('role')">
+              <small *ngIf="roleForm.get('role')?.errors?.['required']">
+                Role selection is required.
+              </small>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary me-2"
+            (click)="closeModal()"
+            [disabled]="submitting"
+          >
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="roleForm.invalid || submitting">
+            <span
+              *ngIf="submitting"
+              class="spinner-border spinner-border-sm me-2"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            {{ submitting ? 'Updating...' : 'Update Role' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+}

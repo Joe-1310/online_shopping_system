@@ -1,0 +1,41 @@
+
+.actions-column {
+  width: 120px;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.modal-backdrop {
+  backdrop-filter: blur(2px);
+}
+
+.text-truncate {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.btn[disabled] .bi-trash-fill {
+  opacity: 0.5;
+}
+
+.card {
+  border: none;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.table-dark th {
+  border-color: #495057;
+}
+
+.badge {
+  font-size: 0.875em;
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}

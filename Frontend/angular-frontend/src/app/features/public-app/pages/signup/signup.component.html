@@ -1,0 +1,128 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h2 class="text-center mb-4">
+        <i class="bi bi-person-plus me-2 text-primary"></i>
+        Create Account
+      </h2>
+      <p class="text-center text-muted">Join our shopping community</p>
+    </div>
+
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="bi bi-person"></i>
+          </span>
+          <input
+            type="text"
+            id="username"
+            class="form-control"
+            formControlName="username"
+            placeholder="Choose a username"
+            [class.is-invalid]="f['username'].invalid && f['username'].touched"
+          />
+        </div>
+        <div class="invalid-feedback" *ngIf="f['username'].invalid && f['username'].touched">
+          Username is required (min 3 characters)
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="bi bi-envelope"></i>
+          </span>
+          <input
+            type="email"
+            id="email"
+            class="form-control"
+            formControlName="email"
+            placeholder="Enter your email"
+            [class.is-invalid]="f['email'].invalid && f['email'].touched"
+          />
+        </div>
+        <div class="invalid-feedback" *ngIf="f['email'].invalid && f['email'].touched">
+          Enter a valid email
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="bi bi-lock"></i>
+          </span>
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            formControlName="password"
+            placeholder="Create a password"
+            [class.is-invalid]="f['password'].invalid && f['password'].touched"
+          />
+        </div>
+        <div class="invalid-feedback" *ngIf="f['password'].invalid && f['password'].touched">
+          Password is required (min 6 characters)
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label for="confirmPassword" class="form-label">Confirm Password</label>
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="bi bi-lock-fill"></i>
+          </span>
+          <input
+            type="password"
+            id="confirmPassword"
+            class="form-control"
+            formControlName="confirmPassword"
+            placeholder="Confirm your password"
+            [class.is-invalid]="
+              (f['confirmPassword'].invalid && f['confirmPassword'].touched) ||
+              signupForm.hasError('passwordMismatch')
+            "
+          />
+        </div>
+        <div
+          class="invalid-feedback"
+          *ngIf="
+            (f['confirmPassword'].invalid && f['confirmPassword'].touched) ||
+            (signupForm.hasError('passwordMismatch') && f['confirmPassword'].touched)
+          "
+        >
+          <span *ngIf="f['confirmPassword'].hasError('required')"
+            >Confirm password is required</span
+          >
+          <span *ngIf="signupForm.hasError('passwordMismatch')">Passwords do not match</span>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary w-100 mb-3"
+        [disabled]="signupForm.invalid || loading()"
+      >
+        <i class="bi bi-person-plus me-2"></i>
+        {{ loading() ? 'Signing up...' : 'Create Account' }}
+      </button>
+    </form>
+
+    <div class="social-login">
+      <div id="googleButton" class="w-100 mb-2"></div>
+      <button type="button" class="btn btn-outline-dark w-100" (click)="loginWithGithub()">
+        <i class="bi bi-github me-2"></i> Sign in with GitHub
+      </button>
+    </div>
+
+    <div class="auth-footer text-center">
+      <p class="mb-0">
+        Already have an account?
+        <a [routerLink]="['/public/login']" class="text-decoration-none">Sign in here</a>
+      </p>
+    </div>
+  </div>
+</div>

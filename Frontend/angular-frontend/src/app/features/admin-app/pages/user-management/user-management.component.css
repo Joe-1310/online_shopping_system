@@ -1,0 +1,42 @@
+.actions-column {
+  width: 100px;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.modal-backdrop {
+  backdrop-filter: blur(2px);
+}
+
+.badge {
+  font-size: 0.875em;
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+.card {
+  border: none;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.table-dark th {
+  border-color: #495057;
+}
+
+.pagination .page-item .page-link {
+  color: #6c757d;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.alert {
+  border-radius: 0.375rem;
+}

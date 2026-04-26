@@ -1,0 +1,59 @@
+<div class="modal fade" [class.show]="show" [style.display]="show ? 'block' : 'none'" tabindex="-1" role="dialog" aria-labelledby="categoryFormModalLabel" aria-hidden="!show">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="categoryFormModalLabel">
+          {{ mode === 'add' ? 'Add New Category' : 'Edit Category' }}
+        </h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+      </div>
+      <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+        <div class="modal-body">
+          <div class="row g-3">
+            <!-- Category Name -->
+            <div class="col-12">
+              <label for="name" class="form-label">Category Name <span class="text-danger">*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                formControlName="name"
+                placeholder="Enter category name"
+                [class.is-invalid]="isFieldInvalid('name')"
+              />
+              <div class="invalid-feedback" *ngIf="isFieldInvalid('name')">
+                <small *ngIf="categoryForm.get('name')?.errors?.['required']">
+                  Category name is required.
+                </small>
+                <small *ngIf="categoryForm.get('name')?.errors?.['minlength']">
+                  Category name must be at least 2 characters long.
+                </small>
+                <small *ngIf="categoryForm.get('name')?.errors?.['maxlength']">
+                  Category name cannot exceed 50 characters.
+                </small>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary me-2" (click)="closeModal()" [disabled]="submitting">
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="categoryForm.invalid || submitting"
+          >
+            <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            {{ mode === 'add' ? 'Add Category' : 'Update Category' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal backdrop -->
+<div class="modal-backdrop fade" [class.show]="show" *ngIf="show" (click)="closeModal()"></div>

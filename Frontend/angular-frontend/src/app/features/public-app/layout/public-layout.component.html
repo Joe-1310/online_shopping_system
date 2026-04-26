@@ -1,0 +1,95 @@
+<div class="public-layout" [attr.dir]="languageService.getDirection()">
+  <!-- Public Header -->
+  <header class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+      <!-- Brand -->
+      <a class="navbar-brand fw-bold text-primary" [routerLink]="['/public/products']">
+        <i class="bi bi-shop me-2"></i>
+        Online Shopping System
+      </a>
+
+      <!-- Navigation -->
+      <nav class="navbar-nav ms-auto d-flex align-items-center">
+        <a class="nav-link" [routerLink]="['/public/home']" routerLinkActive="active">
+          <i class="bi bi-house me-1"></i>
+          {{ 'HOME' | translate }}
+        </a>
+        <a class="nav-link" [routerLink]="['/public/products']" routerLinkActive="active">
+          <i class="bi bi-grid me-1"></i>
+          {{ 'PRODUCTS' | translate }}
+        </a>
+        <a class="nav-link" [routerLink]="['/public/login']" routerLinkActive="active">
+          <i class="bi bi-box-arrow-in-right me-1"></i>
+          {{ 'LOGIN' | translate }}
+        </a>
+        <a class="nav-link" [routerLink]="['/public/signup']" routerLinkActive="active">
+          <i class="bi bi-person-plus me-1"></i>
+          {{ 'SIGNUP' | translate }}
+        </a>
+
+        <!-- Language Dropdown -->
+        <div class="dropdown ms-3">
+          <button
+            class="btn btn-outline-primary dropdown-toggle d-flex align-items-center"
+            type="button"
+            id="languageDropdown"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="bi bi-translate me-1"></i>
+            {{ currentLanguage === 'en' ? 'English' : 'العربية' }}
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="languageDropdown">
+            <li>
+              <button
+                class="dropdown-item d-flex align-items-center"
+                (click)="switchLanguage('en')"
+              >
+                <i
+                  class="bi me-2"
+                  [ngClass]="
+                    currentLanguage === 'en'
+                      ? 'bi-flag-fill text-primary'
+                      : 'bi-flag text-secondary'
+                  "
+                >
+                </i>
+                English
+              </button>
+            </li>
+
+            <li>
+              <button
+                class="dropdown-item d-flex align-items-center"
+                (click)="switchLanguage('ar')"
+              >
+                <i
+                  class="bi me-2"
+                  [ngClass]="
+                    currentLanguage === 'ar'
+                      ? 'bi-flag-fill text-primary'
+                      : 'bi-flag text-secondary'
+                  "
+                >
+                </i>
+                العربية
+              </button>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="flex-grow-1">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Public Footer -->
+  <footer class="bg-light py-4 mt-5">
+    <div class="container text-center">
+      <p class="text-muted mb-0">&copy; 2025 Online Shopping System. All rights reserved.</p>
+    </div>
+  </footer>
+</div>

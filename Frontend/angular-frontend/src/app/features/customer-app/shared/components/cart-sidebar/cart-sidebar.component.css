@@ -1,0 +1,195 @@
+/* Cart Sidebar Styles */
+.offcanvas {
+  width: 400px !important;
+  max-width: 90vw;
+  transition: transform 0.3s ease-in-out;
+}
+
+.offcanvas.show {
+  transform: translateX(0);
+}
+
+.offcanvas:not(.show) {
+  transform: translateX(100%);
+}
+
+/* Header Styles */
+.offcanvas-header {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.offcanvas-title {
+  color: white;
+}
+
+.btn-close {
+  filter: invert(1);
+}
+
+.offcanvas-header .offcanvas-title i {
+  color: white !important;
+}
+
+/* Body Styles */
+.offcanvas-body {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+.cart-items {
+  min-height: 200px;
+}
+
+/* Cart Sidebar Image Container */
+.cart-sidebar-img-container {
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa;
+  border-radius: 0.375rem;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.cart-sidebar-img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+  border-radius: 0.25rem;
+}
+
+.cart-sidebar-img-container img:hover {
+  transform: scale(1.05);
+}
+
+.cart-item {
+  transition: all 0.2s ease;
+}
+
+.cart-item:hover {
+  background-color: #f8f9fa;
+}
+
+.cart-item:last-child {
+  border-bottom: none !important;
+}
+
+/* Item Controls */
+.input-group-sm .form-control {
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+}
+
+.input-group-sm .btn {
+  border-radius: 0;
+}
+
+.input-group-sm .btn:first-child {
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+
+.input-group-sm .btn:last-child {
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+
+/* Footer Styles */
+.offcanvas-footer {
+  background-color: #f8f9fa;
+  position: sticky;
+  bottom: 0;
+}
+
+/* Backdrop Styles */
+.offcanvas-backdrop {
+  z-index: 1040;
+}
+
+.offcanvas-backdrop.show {
+  opacity: 0.5;
+}
+
+/* Empty Cart State */
+.cart-items .display-1 {
+  font-size: 4rem;
+  color: #dee2e6;
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+  .offcanvas {
+    width: 100vw !important;
+  }
+
+  .cart-item .row {
+    flex-direction: column;
+  }
+
+  .cart-item .col-6 {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Animation Enhancements */
+.cart-item {
+  animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Custom Scrollbar */
+.offcanvas-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.offcanvas-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.offcanvas-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.offcanvas-body::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Button Hover Effects */
+.btn-outline-danger:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
+}
+
+.btn-outline-secondary:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
+}
+
+/* Quantity Input Styling */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
