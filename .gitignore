@@ -1,0 +1,47 @@
+# Node.js dependencies
+node_modules/
+*/node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# Angular specific
+Frontend/angular-frontend/dist/
+Frontend/angular-frontend/.angular/
+Frontend/angular-frontend/coverage/
+
+# Spring Boot / Maven specific
+Backend/target/
+Backend/*.log
+Backend/.mvn/wrapper/maven-wrapper.jar
+
+# IDE specific files
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Build outputs
+dist/
+build/
+out/
+Backend/src/main/resources/application.properties
